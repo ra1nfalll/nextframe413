@@ -23,6 +23,8 @@ Please find below some important statistics about the dataset:
     2. Validation - Original - 93901 - After New Split - 56393
     3. Testing - Original - 105855 - After New Split - 60845
 
+(To be added more... )
+
 
 ### Some preprocessing
 If we look closely the data hasn't been split properly for our needs since, test and validation sets have more videos (frames) compared to the training set. Hence we do some more preprocessing, to get our expected split that 60, 20, 20% for train, test and validation sets respectively. 
