@@ -12,19 +12,18 @@ Instead since the main repository where the data is contained holds it in raw fo
 Additionally, in an attempt to make the model more generalizable, we also plan on adding data from a different dataset called [UCF Sport dataset](https://www.crcv.ucf.edu/data/UCF_Sports_Action.php), which contains different activities such as diving, lifting, and skateboarding. To use this dataset we need to cite two papers. And for a different testing approach, if time permits, we will use this dataset just for testing so that we can test how our model is performing with unseen data from a different dataset.
 
 ### Data Statistics
-Please find below some important statistics about the dataset:
+Please find below some important statistics about the dataset we will use (KTH):
 1. Number of videos - 599
-    1. Training - Original - ? - After New Split - 360
-    2. Validation - Original - ? - After New Split - 120
-    3. Testing - Original - ? - After New Split - 119
+    1. Training - Original - 192 - After New Split - 360
+    2. Validation - Original - 191 - After New Split - 120
+    3. Testing - Original - 216 - After New Split - 119
 
 2. Number of Frames - 289716
     1. Training - Original - 89960 - After New Split - 172478
     2. Validation - Original - 93901 - After New Split - 56393
     3. Testing - Original - 105855 - After New Split - 60845
 
-(To be added more... )
-
+3. Frame Image Size - 3\*128\*128
 
 ### Some preprocessing
 If we look closely the data hasn't been split properly for our needs since, test and validation sets have more videos (frames) compared to the training set. Hence we do some more preprocessing, to get our expected split that 60, 20, 20% for train, test and validation sets respectively. 
