@@ -15,12 +15,15 @@ This project will work on the next frame prediction problem. Next frame predicti
 ## Data
 
 ### Source
+The data used on this project is from the Moving MNIST dataset, which is used for unsupervised learning. The link to access and download the data is: http://www.cs.toronto.edu/~nitish/unsupervised_video/
 
 ### Data Summary
+The Moving MNIST dataset contains 10,000 sequences each of length 20. Each sequence shows two handwritten digits moving around, each frame is 64 x 64. Each frame has a black backgorund and the numbers that are floating around are white. It is also important to note that the dataset is grayscale. 
 
 ### Data Transformation
 
 ### Data Split
+The current data split we have is 80% of the data for training, 10% for validation, and 10% for testing.
 
 ## Training
 
