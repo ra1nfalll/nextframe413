@@ -3,7 +3,46 @@
 ## Introduction
 This project will work on the next frame prediction problem. Next frame prediction is an unsupervised machine learning task to predict the next image frame given a sequence of past frames as input. This involves recognizing objects spatially in an image and their temporal relationships across past frames, which can be interpreted as the subtasks to the next frame prediction problem.
 
+## Model
+
+### Model Figure
+(Flowchart goes here)
+ 
+### Model Parameters
+
+### Model Examples 
+
 ## Data
+
+### Source
+
+### Data Summary
+
+### Data Transformation
+
+### Data Split
+
+## Training
+
+### Training Curve
+
+### Hyper parameter Tuning
+
+## Results
+
+### Quantitative Measures
+
+### Quantitative and Qualitative Results
+
+### Justification (IMPORTANT 20pts)
+
+## Ethical Consideration
+
+## Authors
+
+
+
+### (ARCHIVE)
 ### Source: 
 The main dataset that we will use for our project is the [KTH Action Dataset](https://www.csc.kth.se/cvap/actions/). This dataset is composed of videos of people performing different actorchvision.datasets.ImageFoldertions. There are 6 different actions: walking, jogging, running, boxing, hand waving, hand clapping. The videos were filmed in 4 different scenarios. This dataset is available for non-commercial use as per the website: “The database is publicly available for non-commercial use.”
 
