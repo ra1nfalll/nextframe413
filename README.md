@@ -1,7 +1,8 @@
 # CSC413 Project: Predict next frames in a video using Neural Nets
 
 ## Introduction
-This project will work on the next frame prediction problem. Next frame prediction is an unsupervised machine learning task to predict the next image frame given a sequence of past frames as input. This involves recognizing objects spatially in an image and their temporal relationships across past frames, which can be interpreted as the subtasks to the next frame prediction problem.
+This project will work on the next frame prediction problem. Next frame prediction is an unsupervised machine learning task to predict the next image frame given a sequence of past frames as input. This involves recognizing objects spatially in an image and their temporal relationships across past frames, which can be interpreted as the subtasks to the next frame prediction problem. We will input into our model a sequence of frames of a video and then output a sequence of next frames in the video.
+
 
 ## Model
 
@@ -9,21 +10,34 @@ This project will work on the next frame prediction problem. Next frame predicti
 (Flowchart goes here)
  
 ### Model Parameters
+Our model uses 3 convolutional LSTM networks followed by a final convolutional 2d layer. Each one is separated by a batch normalization layer.
 
 ### Model Examples 
 
 ## Data
 
 ### Source
-The data used on this project is from the Moving MNIST dataset, which is used for unsupervised learning. The link to access and download the data is: http://www.cs.toronto.edu/~nitish/unsupervised_video/
+The data used on this project is from the Moving MNIST dataset, which is used for unsupervised learning. It is sourced directly from the University of Toronto from a paper published in 2015 by Nitish Srivastava, Elman Mansimov, and Ruslan Salakhutdinov.The link to access and download the data is: http://www.cs.toronto.edu/~nitish/unsupervised_video/
 
 ### Data Summary
-The Moving MNIST dataset contains 10,000 sequences each of length 20. Each sequence shows two handwritten digits moving around, each frame is 64 x 64. Each frame has a black backgorund and the numbers that are floating around are white. It is also important to note that the dataset is grayscale. 
+The Moving MNIST dataset contains 10,000 sequences each of length 20. Each sequence shows two handwritten digits moving around, each frame is 64 x 64. Each frame has a black backgorund and the digits that are floating around are white. The digits bounce off the edges of the frame and continue moving appropriately after bouncing, but they do not interact with each other and do not bounce off each other. Digits instead simply overlap and continue moving on their current trajectory with no regard for the other digit. It is also important to note that the dataset is grayscale. Below we have a few example of the images, and also GIFs showing the video.
+<img width="1197" alt="Screen Shot 2023-04-16 at 1 40 33 AM" src="https://user-images.githubusercontent.com/49618034/232273410-108cebd9-6d18-46cf-a2c5-5b4c973fcdce.png">
+![f5a50978-13bf-4609-88e5-50f566667934](https://user-images.githubusercontent.com/49618034/232273460-6fd7d6e3-8706-42f3-a8a4-d648f2e5af85.gif)
+![7462818e-3311-416c-9d8d-bbb2fa39fc3e](https://user-images.githubusercontent.com/49618034/232273463-29297307-0b33-4ca5-8ffc-5abbbbdda78f.gif)
+![94e461ba-cee2-4131-a943-0756c48f8887](https://user-images.githubusercontent.com/49618034/232273467-32942af9-5a13-4042-92f0-61d980e5b93a.gif)
+
 
 ### Data Transformation
+We took the data directly from the website using the command wget where it is already inthe form of a numpy array and then load it in directly. In order to use the data in our neural network we performed a few small transformations after loading it in. First, we unsqueezed the data to add a channel dimension because currently each video frame is of the dimensions 64x64x1 and PyTorch models expect a 4 dimensional tensor so we add an additional dimension at the front that represents our number of input channels of 1. Secondly since each pixel in a frame holds a grayscale value from 0 to 255, we normalize the data to be within 0 and 1 to help us stabilize the gradient descent algorithm.
+
 
 ### Data Split
-The current data split we have is 80% of the data for training, 10% for validation, and 10% for testing.
+| Split      | Number of Videos | Percentage of Videos |
+| ---------- | ---------------- | -------------------- |
+| Training   |       8000       |         80%          |
+| Validation |       1000       |         10%          |
+| Test       |       1000       |         10%          |
+
 
 ## Training
 
@@ -34,12 +48,16 @@ The current data split we have is 80% of the data for training, 10% for validati
 ## Results
 
 ### Quantitative Measures
+We evaluate the results using a binary pixel wise cross entropy loss. For each outputted frame in our sequence we compare it to the next 10 actual frames. Then we compare the cross entropy loss of the difference in pixel value for our outputted sequence and the actual.
+
 
 ### Quantitative and Qualitative Results
 
 ### Justification (IMPORTANT 20pts)
 
 ## Ethical Consideration
+Our model is used to generate frames for a video. If you consider this on a larger scale than the dataset that we are using then there may be issues with video prediction. If a large enough network could be trained on a large portion of YouTube for example, anyone in those videos could have frames of a video generated from them. This could be a huge privacy issue for people. With this current model specifically trained on the Moving MNIST dataset we would probably not have much issue.
+
 
 ## Authors
 
