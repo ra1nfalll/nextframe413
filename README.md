@@ -28,7 +28,13 @@ The Moving MNIST dataset contains 10,000 sequences each of length 20. Each seque
 
 
 ### Data Transformation
-We took the data directly from the website using the command wget where it is already inthe form of a numpy array and then load it in directly. In order to use the data in our neural network we performed a few small transformations after loading it in. First, we unsqueezed the data to add a channel dimension because currently each video frame is of the dimensions 64x64x1 and PyTorch models expect a 4 dimensional tensor so we add an additional dimension at the front that represents our number of input channels of 1. Secondly since each pixel in a frame holds a grayscale value from 0 to 255, we normalize the data to be within 0 and 1 to help us stabilize the gradient descent algorithm.
+We took the data directly from the website using the command wget where it is already inthe form of a numpy array and then load it in directly. In order to use the data in our neural network we performed a few small transformations after loading it in. First, we unsqueezed the data to add a channel dimension because currently each video frame is of the dimensions 64x64x1 and PyTorch models expect a 4 dimensional tensor so we add an additional dimension at the front that represents our number of input channels of 1. Secondly since each pixel in a frame holds a grayscale value from 0 to 255, we normalize the data to be within 0 and 1 to help us stabilize the gradient descent algorithm. 
+In order to increase the number of videos that we have to train our model, we inverted the colors of every single video, generating an augmented dataset with double the size of the original one. The process to achieve this result is: First we need to loop through every video in the original dataset, and subsquently loop over each frame. Then we used a pytorch function "torchvision.transforms.functional.invert" to invert the grayscale values of each frame, and finally we combined all the frames and added both the original video and the new video to a augmented dataset. Below there are a few examples of what the new examples look like:
+
+![468357a8-4e61-45f0-a2d0-91fcf8ea098e](https://user-images.githubusercontent.com/49618034/232344696-8db1c365-e490-4449-a0c1-5d14234d80d5.gif)
+![58639a2d-6db2-49a3-9566-96c3f91bb446](https://user-images.githubusercontent.com/49618034/232344698-e48bc068-65df-4566-b809-ca24f0bcb048.gif)
+![b5a75827-2389-419a-b03f-98a0606e0c24](https://user-images.githubusercontent.com/49618034/232344699-8d2c03e5-b247-498b-b224-264e6bbf9036.gif)
+
 
 
 ### Data Split
