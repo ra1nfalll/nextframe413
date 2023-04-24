@@ -74,7 +74,7 @@ Actual split:
 | UNet + ConvLSTM  |  ![download](https://user-images.githubusercontent.com/49618034/233895145-df364043-cf2c-42f0-a2f5-23276d21c486.png) |
 
 ### Hyper parameter Tuning
-The UNet architecture led to a slower learning process compared to the original model. Therefore, for the UNet architecture we chose to run for 10 epochs, and then we noticed that training for a greater number of epochs did not lead to big improvements in the loss of the model. When choosing the batch sizes we first experimented with lower batch sizes such as 3, and then we started to increase it in our different iterations of training the model. The biggest batch size we reached was 30, and we noticed that the batch that led to the faster progress while training was the batch size of 16. 
+The UNet + ConvLSTM we trained for 10 epochs, because the model stabilizes after the 6th epoch and there is no considerable improvement in learning after the 10th epoch. In order to make a comparison to this model, which is our main model, we trained both the "One ConvLSTM" and the UNet for 10 epochs as well. For the UNet + ConvLSTM we even trained the model for 150 epochs, which lead to no improvement, no visible feature was learned by the model. When choosing the batch size we first started with batch size of 3, but we noticed that this led to a very slow training process, hence we fixed our batch size at 16. The batch size of 16 improved the training time, but did not penalize the training loss considerably. 
 
 ## Results
 
@@ -105,7 +105,11 @@ As for Qualitative Measures, since we are predicting the next frame of videos, o
 (NEEDS TO BE FILLED)
 
 ## Ethical Consideration
-Our model is used to generate frames for a video. If you consider this on a larger scale than the dataset that we are using then there may be issues with video prediction. If a large enough network could be trained on a large portion of YouTube for example, anyone in those videos could have frames of a video generated from them. This could be a huge privacy issue for people. With this current model specifically trained on the Moving MNIST dataset we would probably not have much issue.
+1. Our model is used to generate frames for a video. If you consider this on a larger scale than the dataset that we are using then there may be issues with video prediction. If a large enough network could be trained on a large portion of YouTube for example, anyone in those videos could have frames of a video generated from them. This could be a huge privacy issue for people. With this current model specifically trained on the Moving MNIST dataset we would probably not have much issue. 
+2. Bias in datasets (bias in subject or actions): images generated may be better at representing certain groups of people or behaviors over represented in the dataset, or associate certain physical features of population groups to temporal actions from a bias in the data.
+3. In robotic decision making and autonomous driving: ethics of decision making based on the model, as biases in the model will be inherited by the decision making algorithms (Ex: if the model cannot predict future actions of racial minorities accurately, a decision made based upon output for autonomous driving or robotic applications can be dangerous.
+4. Self-driving cars accident prevention: Self-driving cars have both sensors and cameras, using our model it would be possible for the car to predict the future positions of objects in a scene to avoid accidents.
+5. Military Use: Since this model predicts where objects may be in the future, it could be used for predicting positions of moving targets.
 
 
 ## Authors
