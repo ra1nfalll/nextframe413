@@ -13,7 +13,93 @@ We want to aknowledge that the code for this project was based from https://gith
 
  
 ### Model Parameters
-(NEED TO BE FILLED)
+Let's first discuss the implementation of One ConvLSTM.
+This model has the following implementation:
+Batch Size = 16, Kernel Size = 3x3, Number of Kernels = 64, Padding = 1x1
+| Layer/Feature  | Size at Step or of Feature|
+| ------------- | ------------- |
+| ConvLSTM  | input = [16, 1, 10, 64, 64]  |
+| ↳ Hidden State | feature = [16, 64, 64, 64]  |
+| ↳ Cell Input | feature = [16, 64, 64, 64]  |
+| ↳ ConvLSTM Cell | input = [16, 1, 64, 64]  |
+| ↳ ↳ Conv2d | input = [16, 256, 64, 64]  |
+| ↳ ↳ Input Gate | feature = [16, 64, 64, 64]  |
+| ↳ ↳ Forget Gate | feature = [16, 64, 64, 64]  |
+| ↳ ↳ Cell Output | feature = [16, 64, 64, 64]  |
+| ↳ ↳ Output Gate | feature = [16, 64, 64, 64]  |
+| ↳ ↳ Hidden State | feature = [16, 64, 64, 64]  |
+| ↳ ↳ ReLU | input = [16, 64, 64, 64]  |
+| ↳ Unrolled Output | input = [16, 64, 10, 64, 64]  |
+| ↳ Conv2d | input = [16, 64, 10, 64, 64]  |
+| BatchNorm3d  input = | [16, 64, 10, 64, 64]  |
+| Output Cut | input = [16, 1, 64, 64]  |
+| Sigmoid | input = [16, 1, 64, 64]   |
+
+The parameters that are being trained are as follows:
+| Parameter  | Size | # of Parameters |
+| ------------- | ------------- | ------------- |
+| W_ci | [64, 64, 64] | 262144 |
+| W_co | [64, 64, 64] | 262144 |
+| W_cf | [64, 64, 64] | 262144 |
+| Conv2d (Cell) Weights | [256, 65, 3, 3] | 149760 |
+| Conv2d (Cell) Bias | [256] | 256 |
+| Conv2d (Sequential) Weights | [1, 64, 3, 3] | 576 |
+| Conv2d (Sequential) Bias | [1] | 1 |
+| BatchNorm Weights | [64] | 64 |
+| BatchNorm Bias | [64] | 64 |
+
+
+Now let's take a look at the UNet implementation.
+This architecture defines a DoubleConv layer which consists of the following:
+Given n input channels and m output channels
+| DoubleConv  | I/O Channels |
+| ------------- | ------------- |
+| Conv3d  | [n -> m]  |
+| ReLU  | [m -> m]  |
+| Conv3d  | [m -> m]  |
+| ReLU  | [m -> m]  |
+
+This model has the following implementation:
+| Layer  | Size |
+| ------------- | ------------- |
+| Input | [16, 1, 8, 64, 64] |
+| DoubleConv  | [16, 16, 8, 64, 64] |
+| MaxPool | [16, 16, 4, 32, 32] |
+| DoubleConv  | [16, 32, 4, 32, 32] |
+| MaxPool | [16, 32, 2, 16, 16] |
+| DoubleConv  | [16, 64, 2, 16, 16] |
+| MaxPool | [16, 64, 1, 8, 8] |
+| DoubleConv  | [16, 128, 1, 8, 8] |
+| ConvTranspose3d | [16, 64, 2, 16, 16] |
+| DoubleConv  | [16, 64, 2, 16, 16] |
+| ConvTranspose3d | [16, 32, 4, 32, 32] |
+| DoubleConv  | [16, 32, 4, 32, 32] |
+| ConvTranspose3d | [16, 16, 8, 64, 64] |
+| DoubleConv  | [16, 16, 8, 64, 64] |
+| Conv2d | [16, 1, 64, 64] |
+| Sigmoid | [16, 1, 64, 64] |
+
+We have a lengthy list of trainable parameters for each convolution:
+| Trainable Parameters  | Weights Size | Bias Size | # of Parameters |
+| ------------- | ------------- | ------------- | ------------- |
+| DoubleConv1 Conv1 | [16, 1, 3, 3, 3] | [16] | 448 |
+| DoubleConv1 Conv2 | [16, 16, 3, 3, 3] | [16] | 6928 |
+| DoubleConv2 Conv1 | [32, 16, 3, 3, 3] | [32] | 13856 |
+| DoubleConv2 Conv2 | [32, 32, 3, 3, 3] | [32] | 27680 |
+| DoubleConv3 Conv1 | [64, 32, 3, 3, 3] | [64] | 55360 |
+| DoubleConv3 Conv2 | [64, 64, 3, 3, 3] | [64] | 110656 |
+| DoubleConv4 Conv1 | [128, 64, 3, 3, 3] | [128] | 221312 |
+| DoubleConv4 Conv2 | [128, 128, 3, 3, 3] | [128] | 442494 |
+| ConvTranpose1 | [128, 64, 2, 2, 2]| [64] | 65600 |
+| DoubleConv5 Conv1 | [64, 128, 3, 3, 3] | [64] | 221312 |
+| DoubleConv5 Conv2 | [64, 64, 3, 3, 3] | [64] | 110656 |
+| ConvTranpose2 | [64, 32, 2, 2, 2] | [32] | 16416 |
+| DoubleConv6 Conv1 | [32, 64, 3, 3, 3] | [32] | 55360 |
+| DoubleConv6 Conv2 | [32, 32, 3, 3, 3] | [32] | 27680 |
+| ConvTranpose3 | [32, 16, 2, 2, 2] | [16] | 4112 |
+| DoubleConv7 Conv1 | [16, 32, 3, 3, 3] | [16] | 13856 |
+| DoubleConv7 Conv2 | [16, 16, 3, 3, 3] | [16] | 6928 |
+| Conv2d | [1, 16, 1, 1] | [1] | 17 |
 
 ### Model Examples 
 We were not able to have a successful result using the UNet combined with the ConvLSTM, so below we will present two successful examples of adapatations of the original code, one using only one ConvLSTM to make predictions, and the other just the UNet to make predictions. The unsuccessful result will be from the UNet combined with the ConvLSTM as showed in the diagram above. 
@@ -102,7 +188,11 @@ As for Qualitative Measures, since we are predicting the next frame of videos, o
 | UNet + ConvLSTM  | ![9d0a46f6-6c30-4df8-88f0-95a8518504c7](https://user-images.githubusercontent.com/49618034/233894573-a5dab0c1-1dc7-4380-9a35-e18145f00163.gif) | ![e22ecd5a-4545-4cd0-b0b9-aa46393261d6](https://user-images.githubusercontent.com/49618034/233894727-93ef95ce-00c9-432b-b939-b2d8af9d3018.gif) |
 
 ### Justification (IMPORTANT 20pts)
-(NEEDS TO BE FILLED)
+We believe our model performed reasonably well. The task we originally set up to accomplish was to predict the next frame of a video from one of 2 different datasets by the name of UCFSports and KTH. UCFSports contained 150 videos at 10 frames and a 720x480p resolution while KTH contained 600 videos at 25 frame and a 160x120p resolution. The videos showed different human actions such as running, walking or diving. The size of the dataset and length of training time required for simply anything made us abandon the idea and revert back to the current used dataset; Moving MNIST. MovingMNIST is a much simpler dataset, containing 10000 videos of 20 frames at 64x64p resolution. A much smaller resolution enabled us to train on and test with this dataset easier. MovingMNIST is simply videos of handdrawn digits from the famous MNIST dataset bouncing around a static black background. It is essentially a default dataset for this type of problem. We unfortunately did not attain the level of loss we would have liked to reach during the course of training and testing our model. 
+
+Our loss for our best model, which is the one containing UNet reached just below 350. We were aiming for a target of under 300. We did get results that appear with the human eye to look appropriate for the next frame. [EXPLANATION HERE OF HOW OUR QUANTITATIVE AND QUALITATIVE RESULTS SEEM]. We feel we did extensive testing with hyperparameters and different models throughout our time working. Many attempts at models are not shown here because they simply didn't pan our for a variety of reasons. Some things that occured include a too lengthy training time or the model not training well. Our main hyperparameters in batch size and epochs to run for were found through many tests. Other parameters such as number of layers, input/output features, padding, activations etc. required some tinkering but we were able to use a basis in the models that we sampled from for many of these. 
+
+We found that the issue with a lot of our original attempts at models revolved around too many layers and complicated models where we tried to combine different architectures. We ran into a lot of difficulties with fitting sizes together and ensuring training progressed smoothly. When we tried working with simpler concepts such as a single ConvLSTM layer and adapting the UNet architecture we were able to better tune the model and understand the architecture. This led to developing well-tuned models that gave us decent results. Overall, we managed to get decent results in the end, but not as great as a result as we might have wanted. The output frames for example are still a little fuzzy and the digits not very well defined. Nevertheless, we are pleased with our current results but feel they could be better if developed further.
 
 ## Ethical Consideration
 1. Our model is used to generate frames for a video. If you consider this on a larger scale than the dataset that we are using then there may be issues with video prediction. If a large enough network could be trained on a large portion of YouTube for example, anyone in those videos could have frames of a video generated from them. This could be a huge privacy issue for people. With this current model specifically trained on the Moving MNIST dataset we would probably not have much issue. 
@@ -117,6 +207,7 @@ As for Qualitative Measures, since we are predicting the next frame of videos, o
 | --------------------- | ------------------------------------------ |
 | Thiago | Developing and training the model, fixing bugs, plotting training curves, drawing the model, augmenting the data, gathering examples of expected and predicted results, organizing the colab files, and writing the README. |
 | Shrey  | Researching different model architechtures, looking into initial datasets such as the KTH dataset and organizing it. Applying the data augmentation to invert the image pixels. Troubleshooting the models to have them generate better results, and writing the README. | 
+| Ryan | Looking into inital datasets, organizing initial tasks, training the model, fixing bugs, collecting and analyzing data, beta model development, model parameter analysis, and writing the README. |
 
 
 
