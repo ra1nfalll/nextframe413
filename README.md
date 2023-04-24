@@ -84,9 +84,22 @@ We evaluate the performance of the model on the test set using a binary pixel wi
 Additionally, since we noticed the generated images had black pixel noise obscuring the generated digits, we decided to also measure the loss on the features of the generated image after one convolution was applied compared to the features from the same convolution applied to the target. By optimizing based on both the generated pixel intensities and generated features, we hope this new loss can help the model output images of a higher quality by better navigating the loss landscape.
 
 
-
 ### Quantitative and Qualitative Results
-(NEEDS TO BE FILLED)
+As mentioned in the previous section, we solely use the loss measure the quantitative performance of our model. Please check below the results for each of the three models we tested against.
+
+| Model            | Training Loss    | Validation Loss      |
+| -----------------| ---------------- | ---------------------|
+| One ConvLSTM     |       405.35     |         412.47       |
+| UNet             |       330.81     |         336.60       |
+| UNet + ConvLSTM  |       693.38     |         673.05       |
+
+As for Qualitative Measures, since we are predicting the next frame of videos, one very simple and applicable quality measure is visual inspection. We can clearly see from the output of the three different models from the models section, that the frames generated are not as clear and visible as the expected frames for the One ConvLSTM and UNet architecture. As for the UNet + ConvLSTM structure, we don't see any results generated at all and it results only in a completely black frame.
+
+| Model            | Expected | Result |
+| ---------------- | ---------------- | -------------------- |
+| One ConvLSTM     | ![aac82066-e22b-4aa8-918a-616f3d761cf6](https://user-images.githubusercontent.com/49618034/233894318-afeff0a8-d84f-442d-a2ca-fed01bfb2bcf.gif) | ![6be549c2-0f57-4fc4-b42b-3dbdcfcec462](https://user-images.githubusercontent.com/49618034/233894368-86b90cbb-f63b-4946-9c60-d68de6d4a2f7.gif) |
+| UNet             | ![dd47a1ab-2e9e-4353-9cbd-9521c98952a3](https://user-images.githubusercontent.com/49618034/233894475-1a1647e0-a38c-4f23-81ce-362e18c8ce55.gif) | ![2eca8664-7e26-4279-93f1-9078c6b606e1](https://user-images.githubusercontent.com/49618034/233894509-8b3ead6b-f8bf-47e7-b8e9-4f2daacbc673.gif) |
+| UNet + ConvLSTM  | ![9d0a46f6-6c30-4df8-88f0-95a8518504c7](https://user-images.githubusercontent.com/49618034/233894573-a5dab0c1-1dc7-4380-9a35-e18145f00163.gif) | ![e22ecd5a-4545-4cd0-b0b9-aa46393261d6](https://user-images.githubusercontent.com/49618034/233894727-93ef95ce-00c9-432b-b939-b2d8af9d3018.gif) |
 
 ### Justification (IMPORTANT 20pts)
 (NEEDS TO BE FILLED)
@@ -99,6 +112,7 @@ Our model is used to generate frames for a video. If you consider this on a larg
 | Student               | Worked On                                  |
 | --------------------- | ------------------------------------------ |
 | Thiago | Developing and training the model, fixing bugs, plotting training curves, drawing the model, augmenting the data, gathering examples of expected and predicted results, organizing the colab files, and writing the README. |
+| Shrey  | Researching different model architechtures, looking into initial datasets such as the KTH dataset and organizing it. Applying the data augmentation to invert the image pixels. Troubleshooting the models to have them generate better results, and writing the README. | 
 
 
 
