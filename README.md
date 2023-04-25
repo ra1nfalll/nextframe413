@@ -208,7 +208,7 @@ We found that the issue with a lot of our original attempts at models revolved a
 | Thiago | Developing and training the model, fixing bugs, plotting training curves, drawing the model, augmenting the data, gathering examples of expected and predicted results, organizing the colab files, and writing the README. |
 | Shrey  | Researching different model architectures, looking into initial datasets such as the KTH dataset and organizing it. Applying the data augmentation to invert the image pixels. Troubleshooting the models to have them generate better results, and writing the README. | 
 | Ryan | Looking into initial datasets, organizing initial tasks, training the model, fixing bugs, collecting and analyzing data, beta model development, model parameter analysis, and writing the README. |
-
+| Sid | Researching and testing candidate model architechtures, fixing bugs, implementing first model of convLSTM and Unet Transformer, researching loss functions to improve training preformance, README. |
 
 
 
